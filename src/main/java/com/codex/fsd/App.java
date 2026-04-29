@@ -6,9 +6,9 @@ public final class App {
 
     public static void main(String[] args) throws Exception {
         int port = Integer.parseInt(System.getenv().getOrDefault("PORT", "8080"));
-        ProjectStore store = ProjectStore.seeded();
+        FoodStore store = FoodStore.seeded();
         ApiServer server = new ApiServer(port, store, "frontend");
         server.start();
-        System.out.printf("DeliveryDesk is running at http://localhost:%d%n", port);
+        System.out.printf("BiteFlow is running at http://localhost:%d%n", port);
     }
 }

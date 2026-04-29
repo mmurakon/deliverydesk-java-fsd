@@ -14,12 +14,24 @@ public final class Json {
         return parser.parseObject();
     }
 
-    public static String array(List<Project> projects) {
+    public static String arrayMenu(List<MenuItem> menu) {
         List<String> items = new ArrayList<>();
-        for (Project project : projects) {
-            items.add(project.toJson());
+        for (MenuItem item : menu) {
+            items.add(item.toJson());
         }
-        return "[" + String.join(",", items) + "]";
+        return arrayValues(items);
+    }
+
+    public static String arrayOrders(List<Order> orders) {
+        List<String> items = new ArrayList<>();
+        for (Order order : orders) {
+            items.add(order.toJson());
+        }
+        return arrayValues(items);
+    }
+
+    public static String arrayValues(List<String> jsonValues) {
+        return "[" + String.join(",", jsonValues) + "]";
     }
 
     public static String pair(String key, String value) {
@@ -28,6 +40,14 @@ public final class Json {
 
     public static String pair(String key, int value) {
         return quote(key) + ":" + value;
+    }
+
+    public static String pair(String key, boolean value) {
+        return quote(key) + ":" + value;
+    }
+
+    public static String rawPair(String key, String jsonValue) {
+        return quote(key) + ":" + jsonValue;
     }
 
     public static String error(String message) {

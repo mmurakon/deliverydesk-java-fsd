@@ -9,16 +9,14 @@ import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 public final class ApiServer {
     private final HttpServer server;
-    private final ProjectStore store;
+    private final FoodStore store;
     private final Path frontendRoot;
 
-    public ApiServer(int port, ProjectStore store, String frontendRoot) throws IOException {
+    public ApiServer(int port, FoodStore store, String frontendRoot) throws IOException {
         this.server = HttpServer.create(new InetSocketAddress(port), 0);
         this.store = store;
         this.frontendRoot = Path.of(frontendRoot);
@@ -34,21 +32,26 @@ public final class ApiServer {
             String path = exchange.getRequestURI().getPath();
             String method = exchange.getRequestMethod();
 
-            if (path.equals("/api/projects") && method.equals("GET")) {
-                sendJson(exchange, 200, Json.array(store.findAll()));
+            if (path.equals("/api/menu") && method.equals("GET")) {
+                sendJson(exchange, 200, Json.arrayMenu(store.menu()));
                 return;
             }
 
-            if (path.equals("/api/projects") && method.equals("POST")) {
-                Project created = store.create(toProject(readBody(exchange)));
+            if (path.equals("/api/orders") && method.equals("GET")) {
+                sendJson(exchange, 200, Json.arrayOrders(store.orders()));
+                return;
+            }
+
+            if (path.equals("/api/orders") && method.equals("POST")) {
+                Order created = store.createOrder(Json.object(readBody(exchange)));
                 sendJson(exchange, 201, created.toJson());
                 return;
             }
 
-            if (path.startsWith("/api/projects/") && path.endsWith("/status") && method.equals("PATCH")) {
-                String idPart = path.substring("/api/projects/".length(), path.length() - "/status".length());
-                ProjectStatus status = ProjectStatus.valueOf(Json.object(readBody(exchange)).get("status"));
-                Project updated = store.updateStatus(Integer.parseInt(idPart), status);
+            if (path.startsWith("/api/orders/") && path.endsWith("/status") && method.equals("PATCH")) {
+                String idPart = path.substring("/api/orders/".length(), path.length() - "/status".length());
+                OrderStatus status = OrderStatus.valueOf(Json.object(readBody(exchange)).get("status"));
+                Order updated = store.updateStatus(Integer.parseInt(idPart), status);
                 sendJson(exchange, 200, updated.toJson());
                 return;
             }
@@ -71,27 +74,6 @@ public final class ApiServer {
         } catch (Exception exception) {
             sendJson(exchange, 500, Json.error("Unexpected server error"));
         }
-    }
-
-    private Project toProject(String body) {
-        Map<String, String> input = Json.object(body);
-        return new Project(
-            0,
-            required(input, "name"),
-            required(input, "owner"),
-            required(input, "description"),
-            ProjectStatus.valueOf(required(input, "status")),
-            Priority.valueOf(required(input, "priority")),
-            LocalDate.parse(required(input, "dueDate"))
-        );
-    }
-
-    private String required(Map<String, String> input, String key) {
-        String value = input.get(key);
-        if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException(key + " is required");
-        }
-        return value.trim();
     }
 
     private String readBody(HttpExchange exchange) throws IOException {

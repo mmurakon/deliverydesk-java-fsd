@@ -1,13 +1,16 @@
-# Java FSD Project: DeliveryDesk
+# BiteFlow: Java + React Food Ordering App
 
-DeliveryDesk is a small full-stack Java project for tracking delivery work across a software team. It includes a Java 17 backend, REST-style API endpoints, an in-browser frontend, seeded data, and a tiny test harness.
+BiteFlow is a full-stack food ordering app built with a Java 17 backend and a React frontend. Customers can browse menu items, build a cart, place delivery orders, and watch orders move through kitchen statuses.
 
-## What It Shows
+## Features
 
-- Java backend with routing, request parsing, response helpers, and in-memory storage
-- REST-style JSON API for projects, metrics, and status updates
-- Responsive frontend with filtering, forms, optimistic UI updates, and dashboards
-- No external dependencies, so it runs with only the JDK
+- Java HTTP API using only the JDK
+- React frontend served by the Java backend
+- Menu browsing by category
+- Cart quantity controls and checkout form
+- Order queue with status updates
+- Restaurant metrics for menu count, open orders, delivered orders, and revenue
+- Lightweight Java test harness
 
 ## Run
 
@@ -36,38 +39,50 @@ PORT=9090 ./scripts/run.sh
 ## API
 
 ```text
-GET    /api/projects
-POST   /api/projects
-PATCH  /api/projects/{id}/status
+GET    /api/menu
+GET    /api/orders
+POST   /api/orders
+PATCH  /api/orders/{id}/status
 GET    /api/metrics
 ```
 
-Example create payload:
+Example order payload:
 
 ```json
 {
-  "name": "Customer Portal",
-  "owner": "Priya",
-  "status": "IN_PROGRESS",
-  "priority": "HIGH",
-  "dueDate": "2026-05-15",
-  "description": "Build account dashboard and billing workflows."
+  "customerName": "Priya",
+  "address": "120 Spring Street",
+  "items": "1:2,3:1",
+  "notes": "No onions, call on arrival"
 }
 ```
+
+`items` uses `menuItemId:quantity` pairs so the Java app can stay dependency-free without a JSON library.
 
 Example status update:
 
 ```json
 {
-  "status": "DONE"
+  "status": "PREPARING"
 }
+```
+
+Supported statuses:
+
+```text
+RECEIVED
+PREPARING
+OUT_FOR_DELIVERY
+DELIVERED
 ```
 
 ## Project Layout
 
 ```text
-src/main/java/com/codex/fsd  Java backend
+src/main/java/com/codex/fsd  Java backend and domain logic
 src/test/java/com/codex/fsd  Lightweight tests
-frontend                         Static UI served by Java
+frontend                         React UI served by Java
 scripts                          Run and test scripts
 ```
+
+The React UI uses React 18 from a CDN in `frontend/index.html`, while the API and static file server are implemented in Java.

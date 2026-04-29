@@ -3,123 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DeliveryDesk</title>
+    <title>BiteFlow</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <header class="topbar">
-      <div>
-        <p class="eyebrow">Java FSD Workspace</p>
-        <h1>DeliveryDesk</h1>
-      </div>
-      <button id="refreshButton" class="icon-button" aria-label="Refresh projects" title="Refresh projects">
-        <span aria-hidden="true">↻</span>
-      </button>
-    </header>
-
-    <main class="shell">
-      <section class="metrics" aria-label="Delivery metrics">
-        <article>
-          <span id="totalMetric">0</span>
-          <p>Total</p>
-        </article>
-        <article>
-          <span id="activeMetric">0</span>
-          <p>Active</p>
-        </article>
-        <article>
-          <span id="doneMetric">0</span>
-          <p>Done</p>
-        </article>
-        <article>
-          <span id="highMetric">0</span>
-          <p>High Priority</p>
-        </article>
-      </section>
-
-      <section class="workspace">
-        <aside class="panel">
-          <div class="section-heading">
-            <h2>New Project</h2>
-          </div>
-          <form id="projectForm">
-            <label>
-              Name
-              <input name="name" maxlength="70" required placeholder="Payments modernization" />
-            </label>
-            <label>
-              Owner
-              <input name="owner" maxlength="40" required placeholder="Aarav" />
-            </label>
-            <div class="two-column">
-              <label>
-                Status
-                <select name="status">
-                  <option value="PLANNED">Planned</option>
-                  <option value="IN_PROGRESS" selected>In Progress</option>
-                  <option value="BLOCKED">Blocked</option>
-                  <option value="DONE">Done</option>
-                </select>
-              </label>
-              <label>
-                Priority
-                <select name="priority">
-                  <option value="LOW">Low</option>
-                  <option value="MEDIUM" selected>Medium</option>
-                  <option value="HIGH">High</option>
-                </select>
-              </label>
-            </div>
-            <label>
-              Due Date
-              <input name="dueDate" type="date" required />
-            </label>
-            <label>
-              Description
-              <textarea name="description" maxlength="180" required placeholder="What needs to ship?"></textarea>
-            </label>
-            <button class="primary-button" type="submit">Create Project</button>
-          </form>
-        </aside>
-
-        <section class="panel project-panel">
-          <div class="section-heading project-toolbar">
-            <h2>Projects</h2>
-            <div class="segmented" role="tablist" aria-label="Project status filter">
-              <button class="active" type="button" data-filter="ALL">All</button>
-              <button type="button" data-filter="IN_PROGRESS">Active</button>
-              <button type="button" data-filter="BLOCKED">Blocked</button>
-              <button type="button" data-filter="DONE">Done</button>
-            </div>
-          </div>
-          <div id="projectList" class="project-list"></div>
-        </section>
-      </section>
-    </main>
-
-    <template id="projectTemplate">
-      <article class="project-card">
-        <div class="card-top">
-          <div>
-            <p class="project-owner"></p>
-            <h3></h3>
-          </div>
-          <span class="priority-pill"></span>
-        </div>
-        <p class="project-description"></p>
-        <div class="project-meta">
-          <span class="status-pill"></span>
-          <span class="due-date"></span>
-        </div>
-        <div class="status-actions">
-          <button type="button" data-status="PLANNED">Plan</button>
-          <button type="button" data-status="IN_PROGRESS">Start</button>
-          <button type="button" data-status="BLOCKED">Block</button>
-          <button type="button" data-status="DONE">Done</button>
-        </div>
-      </article>
-    </template>
-
+    <div id="root"></div>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="/app.js"></script>
   </body>
 </html>
